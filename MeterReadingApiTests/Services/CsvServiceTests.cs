@@ -40,7 +40,6 @@ namespace MeterReadingApiTests.Services
             result.Last().Header3.Should().Be("value5");
         }
 
-
         [Fact]
         public async Task ShouldIgnoreColumnsNotInMapForSuppliedStream()
         {

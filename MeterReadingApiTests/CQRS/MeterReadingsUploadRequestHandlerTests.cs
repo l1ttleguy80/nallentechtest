@@ -11,23 +11,23 @@ using Moq;
 
 namespace MeterReadingApiTests.CQRS
 {
-	public class MeterReadingsUploadRequestHandlerTests
-	{
-		private readonly Mock<ICsvService> csvService;
+    public class MeterReadingsUploadRequestHandlerTests
+    {
+        private readonly Mock<ICsvService> csvService;
         private readonly Mock<ICustomerService> customerService;
         private readonly Mock<IMeterReadingService> meterReadingService;
-		private readonly MeterReadingsUploadRequestHandler resolver;
+        private readonly MeterReadingsUploadRequestHandler resolver;
 
-		public MeterReadingsUploadRequestHandlerTests()
-		{
-			this.csvService = new Mock<ICsvService>();
+        public MeterReadingsUploadRequestHandlerTests()
+        {
+            this.csvService = new Mock<ICsvService>();
             this.customerService = new Mock<ICustomerService>();
             this.meterReadingService = new Mock<IMeterReadingService>();
-			this.resolver = new MeterReadingsUploadRequestHandler(
-                this.csvService.Object,
-                this.customerService.Object,
-                this.meterReadingService.Object);
-		}
+            this.resolver = new MeterReadingsUploadRequestHandler(
+            this.csvService.Object,
+            this.customerService.Object,
+            this.meterReadingService.Object);
+        }
 
         [Fact]
         public async Task ShouldReturnSuccessCount()
@@ -43,11 +43,11 @@ namespace MeterReadingApiTests.CQRS
                 }};
 
             this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .Returns(data.ToAsyncEnumerable());
+            .Returns(data.ToAsyncEnumerable());
 
             this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(true);
             this.meterReadingService.Setup(x => x.AddMeterReading(It.IsAny<MeterReading>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+            .ReturnsAsync(true);
 
             // Act
             var result = await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
@@ -72,7 +72,7 @@ namespace MeterReadingApiTests.CQRS
                 }};
 
             this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .Returns(data.ToAsyncEnumerable());
+            .Returns(data.ToAsyncEnumerable());
 
             this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(false);
 
@@ -99,12 +99,12 @@ namespace MeterReadingApiTests.CQRS
                 }};
 
             this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .Returns(data.ToAsyncEnumerable());
+            .Returns(data.ToAsyncEnumerable());
 
             this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(true);
 
             this.meterReadingService.Setup(x => x.AddMeterReading(It.IsAny<MeterReading>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            .ReturnsAsync(false);
 
             // Act
             var result = await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
@@ -116,20 +116,20 @@ namespace MeterReadingApiTests.CQRS
         }
 
         [Fact]
-		public void ShouldThrowArgumentExceptionOnHeaderValidationExceptionFromCsvService()
-		{
+        public void ShouldThrowArgumentExceptionOnHeaderValidationExceptionFromCsvService()
+        {
             // Arrange
             var file = new Mock<IFormFile>();
 
             this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .Throws(new HeaderValidationException(default, Array.Empty<InvalidHeader>()));
+            .Throws(new HeaderValidationException(default, Array.Empty<InvalidHeader>()));
 
             // Act
             Func<Task> result = async () => await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
 
-			// Assert
-			result.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid File Format");
-		}
+            // Assert
+            result.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid File Format");
+        }
     }
 }
 

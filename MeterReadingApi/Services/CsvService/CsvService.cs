@@ -5,9 +5,9 @@ using CsvHelper.Configuration;
 namespace MeterReadingApi.Services.CsvService
 {
     public class CsvService : ICsvService
-	{
+    {
         public IAsyncEnumerable<T> ReadCsv<T, TMap>(Stream file, CancellationToken cancellationToken)
-            where TMap : ClassMap
+        where TMap : ClassMap
         {
             var reader = new StreamReader(file);
             var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
