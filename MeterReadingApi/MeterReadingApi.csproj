@@ -14,6 +14,9 @@
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="linq2db" Version="2.9.8" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +25,14 @@
     <None Remove="Services\" />
     <None Remove="Services\CsvService\" />
     <None Remove="Mappers\" />
+    <None Remove="SQL\" />
+    <None Remove="SQL\1.Tables\" />
+    <None Remove="SQL\2.Constraints\" />
+    <None Remove="Services\SupplierDatabase\" />
+    <None Remove="Services\SupplierDatabase\Tables\" />
+    <None Remove="Services\CustomerService\" />
+    <None Remove="Options\" />
+    <None Remove="Services\MeterReadingService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CQRS\" />
@@ -29,5 +40,13 @@
     <Folder Include="Services\" />
     <Folder Include="Services\CsvService\" />
     <Folder Include="Mappers\" />
+    <Folder Include="SQL\" />
+    <Folder Include="SQL\1.Tables\" />
+    <Folder Include="SQL\2.Constraints\" />
+    <Folder Include="Services\SupplierDatabase\" />
+    <Folder Include="Services\SupplierDatabase\Tables\" />
+    <Folder Include="Services\CustomerService\" />
+    <Folder Include="Options\" />
+    <Folder Include="Services\MeterReadingService\" />
   </ItemGroup>
 </Project>

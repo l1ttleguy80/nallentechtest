@@ -3,7 +3,7 @@ using MeterReadingApi.Models;
 
 namespace MeterReadingApi.Mappers
 {
-    public class MeterReadingsMap : ClassMap<MeterReadings>
+    public class MeterReadingsMap : ClassMap<MeterReading>
 	{
         public MeterReadingsMap()
         {

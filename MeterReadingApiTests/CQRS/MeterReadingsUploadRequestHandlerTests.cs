@@ -4,6 +4,8 @@ using MeterReadingApi.CQRS;
 using MeterReadingApi.Mappers;
 using MeterReadingApi.Models;
 using MeterReadingApi.Services.CsvService;
+using MeterReadingApi.Services.CustomerService;
+using MeterReadingApi.Services.MeterReadingService;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
@@ -12,12 +14,19 @@ namespace MeterReadingApiTests.CQRS
 	public class MeterReadingsUploadRequestHandlerTests
 	{
 		private readonly Mock<ICsvService> csvService;
+        private readonly Mock<ICustomerService> customerService;
+        private readonly Mock<IMeterReadingService> meterReadingService;
 		private readonly MeterReadingsUploadRequestHandler resolver;
 
 		public MeterReadingsUploadRequestHandlerTests()
 		{
 			this.csvService = new Mock<ICsvService>();
-			this.resolver = new MeterReadingsUploadRequestHandler(this.csvService.Object);
+            this.customerService = new Mock<ICustomerService>();
+            this.meterReadingService = new Mock<IMeterReadingService>();
+			this.resolver = new MeterReadingsUploadRequestHandler(
+                this.csvService.Object,
+                this.customerService.Object,
+                this.meterReadingService.Object);
 		}
 
         [Fact]
@@ -25,16 +34,20 @@ namespace MeterReadingApiTests.CQRS
         {
             // Arrange
             var file = new Mock<IFormFile>();
-            var data = new List<MeterReadings> {
-                new MeterReadings
+            var data = new List<MeterReading> {
+                new MeterReading
                 {
                     AccountId = "AccountId",
                     MeterReadingDateTime = new DateTime(2023, 5, 1),
                     MeterReadValue = 1234
                 }};
 
-            this.csvService.Setup(x => x.ReadCsv<MeterReadings, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
                 .Returns(data.ToAsyncEnumerable());
+
+            this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(true);
+            this.meterReadingService.Setup(x => x.AddMeterReading(It.IsAny<MeterReading>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
 
             // Act
             var result = await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
@@ -46,20 +59,22 @@ namespace MeterReadingApiTests.CQRS
         }
 
         [Fact]
-        public async Task ShouldReturnFailureCount()
+        public async Task ShouldReturnFailureIfCustomerDoesntExist()
         {
             // Arrange
             var file = new Mock<IFormFile>();
-            var data = new List<MeterReadings> {
-                new MeterReadings
+            var data = new List<MeterReading> {
+                new MeterReading
                 {
                     AccountId = "AccountId",
                     MeterReadingDateTime = new DateTime(2023, 5, 1),
                     MeterReadValue = 1234
                 }};
 
-            this.csvService.Setup(x => x.ReadCsv<MeterReadings, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
                 .Returns(data.ToAsyncEnumerable());
+
+            this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(false);
 
             // Act
             var result = await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
@@ -67,7 +82,37 @@ namespace MeterReadingApiTests.CQRS
             // Assert
             result.Should().NotBeNull();
             result.Should().BeOfType<MeterReadingsUpload>();
-            result.As<MeterReadingsUpload>().FailureCount.Should().Be(0);
+            result.As<MeterReadingsUpload>().FailureCount.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailureIfMeterReadingServiceFailsToAddReading()
+        {
+            // Arrange
+            var file = new Mock<IFormFile>();
+            var data = new List<MeterReading> {
+                new MeterReading
+                {
+                    AccountId = "AccountId",
+                    MeterReadingDateTime = new DateTime(2023, 5, 1),
+                    MeterReadValue = 1234
+                }};
+
+            this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+                .Returns(data.ToAsyncEnumerable());
+
+            this.customerService.Setup(x => x.AccountIdExists(It.Is<string>(y => y.Equals("AccountId")))).Returns(true);
+
+            this.meterReadingService.Setup(x => x.AddMeterReading(It.IsAny<MeterReading>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            // Act
+            var result = await this.resolver.Handle(new MeterReadingsUploadRequestHandler.Context(file.Object), CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<MeterReadingsUpload>();
+            result.As<MeterReadingsUpload>().FailureCount.Should().Be(1);
         }
 
         [Fact]
@@ -76,7 +121,7 @@ namespace MeterReadingApiTests.CQRS
             // Arrange
             var file = new Mock<IFormFile>();
 
-            this.csvService.Setup(x => x.ReadCsv<MeterReadings, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
+            this.csvService.Setup(x => x.ReadCsv<MeterReading, MeterReadingsMap>(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
                 .Throws(new HeaderValidationException(default, Array.Empty<InvalidHeader>()));
 
             // Act
