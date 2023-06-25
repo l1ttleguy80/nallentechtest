@@ -4,7 +4,7 @@ namespace MeterReadingApi.Services.SupplierDatabase.Tables
 {
     [Table(Name = "meterreadings", Schema = "public")]
     public class MeterReadings
-	{
+    {
         [NotNull]
         [PrimaryKey]
         [Column(IsIdentity = true), SequenceName("meterreadings_id_seq")]

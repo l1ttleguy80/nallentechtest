@@ -25,18 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Controllers\" />
-    <None Remove="CQRS\" />
-    <None Remove="Services\" />
-    <None Remove="Mocks\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="CQRS\" />
-    <Folder Include="Services\" />
-    <Folder Include="Mocks\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MeterReadingApi\MeterReadingApi.csproj" />
   </ItemGroup>
 </Project>

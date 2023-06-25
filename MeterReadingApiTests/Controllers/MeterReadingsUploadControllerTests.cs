@@ -67,7 +67,7 @@ public class MeterReadingsUploadControllerTests
         // Arrange
         var file = new Mock<IFormFile>();
         this.resolver.Setup(x => x.Send(It.IsAny<MeterReadingsUploadRequestHandler.Context>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception("Error"));
+        .ThrowsAsync(new Exception("Error"));
 
         // Act
         var result = await this.controller.Post(file.Object, CancellationToken.None);
@@ -78,12 +78,12 @@ public class MeterReadingsUploadControllerTests
         result.As<ObjectResult>().Value.As<ProblemDetails>().Status.Should().Be((int)HttpStatusCode.InternalServerError);
         this.resolver.Verify(x => x.Send(It.IsAny<MeterReadingsUploadRequestHandler.Context>(), It.IsAny<CancellationToken>()), Times.Once);
         this.logger.Verify(
-            x => x.Log(
-                LogLevel.Error,
-                It.IsAny<EventId>(),
-                It.IsAny<object>(),
-                It.IsAny<Exception>(),
-                (Func<object, Exception?, string>)It.IsAny<object>()),
-             Times.Once);
+        x => x.Log(
+            LogLevel.Error,
+            It.IsAny<EventId>(),
+            It.IsAny<object>(),
+            It.IsAny<Exception>(),
+            (Func<object, Exception?, string>)It.IsAny<object>()),
+        Times.Once);
     }
 }

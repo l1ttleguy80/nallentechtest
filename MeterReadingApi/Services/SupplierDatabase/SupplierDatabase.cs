@@ -7,13 +7,13 @@ using Npgsql;
 namespace MeterReadingApi.Services.SupplierDatabase
 {
     public class SupplierDatabase : DataConnection, ISupplierDatabase
-	{
-		public SupplierDatabase(string connectionString)
-			: base(new PostgreSQLDataProvider("Postgressql", PostgreSQLVersion.v95), new NpgsqlConnection(connectionString))
-		{
-		}
+    {
+        public SupplierDatabase(string connectionString)
+        : base(new PostgreSQLDataProvider("Postgressql", PostgreSQLVersion.v95), new NpgsqlConnection(connectionString))
+        {
+        }
 
-		public DataConnection DataConnection => this;
+        public DataConnection DataConnection => this;
 
         public ITable<Customer> Customer => this.GetTable<Customer>();
 

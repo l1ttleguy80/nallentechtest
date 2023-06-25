@@ -6,17 +6,17 @@ using MeterReadingApi.Services.CsvService;
 namespace MeterReadingApiTests.Services
 {
     public class CsvServiceTests
-	{
+    {
         private readonly CsvService csvService;
 
-		public CsvServiceTests()
-		{
+        public CsvServiceTests()
+        {
             this.csvService = new CsvService();
-		}
+        }
 
         [Fact]
-		public async Task ShouldReturnMappedListForSuppliedStream()
-		{
+        public async Task ShouldReturnMappedListForSuppliedStream()
+        {
             // Arrange
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
@@ -121,6 +121,6 @@ namespace MeterReadingApiTests.Services
                 Map(m => m.Header3);
             }
         }
-	}
+    }
 }
 

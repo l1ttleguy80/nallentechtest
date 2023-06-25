@@ -7,29 +7,29 @@ using Moq;
 
 namespace MeterReadingApiTests.Services
 {
-	public class CustomerServiceTests
-	{
-		private readonly Mock<ISupplierDatabase> supplierDatabase;
+    public class CustomerServiceTests
+    {
+        private readonly Mock<ISupplierDatabase> supplierDatabase;
         private readonly CustomerService customerService;
 
-		public CustomerServiceTests()
-		{
-			this.supplierDatabase = new Mock<ISupplierDatabase>();
-			this.customerService = new CustomerService(this.supplierDatabase.Object);
-		}
+        public CustomerServiceTests()
+        {
+            this.supplierDatabase = new Mock<ISupplierDatabase>();
+            this.customerService = new CustomerService(this.supplierDatabase.Object);
+        }
 
-		[InlineData("")]
-		[InlineData(" ")]
-		[Theory]
-		public void ShouldThrowExceptionForEmptyAccountId(string accountId)
-		{
+        [InlineData("")]
+        [InlineData(" ")]
+        [Theory]
+        public void ShouldThrowExceptionForEmptyAccountId(string accountId)
+        {
             // Arrange
             // Act
             Action result = () => this.customerService.AccountIdExists(accountId);
 
-			// Assert
-			result.Should().ThrowExactly<ArgumentException>();
-		}
+            // Assert
+            result.Should().ThrowExactly<ArgumentException>();
+        }
 
         [Fact]
         public void ShouldThrowExceptionForNullAccountId()
@@ -42,28 +42,28 @@ namespace MeterReadingApiTests.Services
             result.Should().ThrowExactly<ArgumentNullException>();
         }
 
-		[Fact]
-		public void ShouldReturnTrueWhenAccountIdIsFound()
-		{
-			// Arrange
-			var customerList = new List<Customer>
-			{
-				new Customer
-				{
-					AccountId = "accountId",
-					FirstName = "firstName",
-					LastName = "lastName"
-				}
-			};
+        [Fact]
+        public void ShouldReturnTrueWhenAccountIdIsFound()
+        {
+            // Arrange
+            var customerList = new List<Customer>
+            {
+                new Customer
+                {
+                    AccountId = "accountId",
+                    FirstName = "firstName",
+                    LastName = "lastName"
+                }
+            };
 
-			this.supplierDatabase.Setup(x => x.Customer).Returns(new MockDatabaseTable<Customer>(customerList));
+            this.supplierDatabase.Setup(x => x.Customer).Returns(new MockDatabaseTable<Customer>(customerList));
 
-			// Act
-			var result = this.customerService.AccountIdExists("accountId");
+            // Act
+            var result = this.customerService.AccountIdExists("accountId");
 
-			// Assert
-			result.Should().BeTrue();
-		}
+            // Assert
+            result.Should().BeTrue();
+        }
 
         [Fact]
         public void ShouldReturnFalseWhenAccountIdIsNotFound()

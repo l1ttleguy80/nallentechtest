@@ -1,7 +1,7 @@
 ﻿namespace MeterReadingApi.Services.CustomerService
 {
-	public interface ICustomerService
-	{
+    public interface ICustomerService
+    {
         bool AccountIdExists(string accountId);
     }
 }

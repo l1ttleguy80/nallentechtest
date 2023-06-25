@@ -19,34 +19,4 @@
     <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="CQRS\" />
-    <None Remove="Models\" />
-    <None Remove="Services\" />
-    <None Remove="Services\CsvService\" />
-    <None Remove="Mappers\" />
-    <None Remove="SQL\" />
-    <None Remove="SQL\1.Tables\" />
-    <None Remove="SQL\2.Constraints\" />
-    <None Remove="Services\SupplierDatabase\" />
-    <None Remove="Services\SupplierDatabase\Tables\" />
-    <None Remove="Services\CustomerService\" />
-    <None Remove="Options\" />
-    <None Remove="Services\MeterReadingService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CQRS\" />
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-    <Folder Include="Services\CsvService\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="SQL\" />
-    <Folder Include="SQL\1.Tables\" />
-    <Folder Include="SQL\2.Constraints\" />
-    <Folder Include="Services\SupplierDatabase\" />
-    <Folder Include="Services\SupplierDatabase\Tables\" />
-    <Folder Include="Services\CustomerService\" />
-    <Folder Include="Options\" />
-    <Folder Include="Services\MeterReadingService\" />
-  </ItemGroup>
 </Project>
